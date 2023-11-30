@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "pkg/grpcserver";
+
+package grpcserver;
+
+service DbHandler {
+  rpc CreateArticle(ArticleRequest) returns (ArticleResponse) {
+    option (google.api.http) = {
+      post: "/article"
+      body: "*"
+    };
+  }
+  
+  rpc GetArticle(ArticleID) returns (GetArticleResponse) {
+    option (google.api.http) = {
+      get: "/article/{id}"
+    };
+  }
+  
+  rpc DeleteArticle(ArticleID) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/article/{id}"
+    };
+  }
+  
+  rpc UpdateArticle(UpdateRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/article"
+      body: "*"
+    };
+  }
+  
+  rpc CreateComment(CommentRequest) returns (CommentResponse) {
+    option (google.api.http) = {
+      post: "/comment"
+      body: "*"
+    };
+  }
+}
+
+message ArticleRequest {
+  string name = 1;
+  int64 rating = 2;
+}
+
+message ArticleResponse {
+  string answer = 1;
+}
+
+message ArticleID {
+  int64 id = 1;
+}
+
+message GetArticleResponse {
+  string answer = 1;
+  string comments = 2;
+}
+
+message UpdateRequest {
+  int64 id = 1;
+  string name = 2;
+  int64 rating = 3;
+}
+
+message CommentRequest {
+  int64 article_id = 1;
+  string text = 2;
+}
+
+message CommentResponse {
+  string answer = 1;
+}
